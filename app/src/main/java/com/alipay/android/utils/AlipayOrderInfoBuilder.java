@@ -14,7 +14,7 @@ import java.net.URLEncoder;
  * <p/>
  * Example:
  * <pre>
- *     private String createAlipayInfo() {
+ *     public String createAlipayInfo() {
  *         AlipayOrderInfoBuilder builder = new AlipayOrderInfoBuilder();
  *
  *         // builder.setLogEnabled(true); // For debug
