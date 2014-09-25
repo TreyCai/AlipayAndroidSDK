@@ -25,37 +25,39 @@ Android Studio：File -> Import module
 
 例子:
 
-    private void toPay() {
-        AliPay aliPay = new AliPay(PayActivity.this, mAlipayHandler);
-        //设置为沙箱模式，不设置默认为线上环境
-        //alipay.setSandBox(true);
-        String result = aliPay.pay(createAlipayInfo());
+```Java
+private void toPay() {
+    AliPay aliPay = new AliPay(PayActivity.this, mAlipayHandler);
+    //设置为沙箱模式，不设置默认为线上环境
+    //alipay.setSandBox(true);
+    String result = aliPay.pay(createAlipayInfo());
         
-        ...
-    }
+    ...
+}
 
-	public String createAlipayInfo() {
-         AlipayOrderInfoBuilder builder = new AlipayOrderInfoBuilder();
+public String createAlipayInfo() {
+    AlipayOrderInfoBuilder builder = new AlipayOrderInfoBuilder();
  
-         // builder.setLogEnabled(true); // For debug
-         builder.setLogEnabled(false);
+    // builder.setLogEnabled(true); // For debug
+    builder.setLogEnabled(false);
 
-         //---- Required ----
-         builder.setOutTradeNo( your_out_trade_no );
-         builder.setSubject( your_subject );
-         builder.setBody( your_body );
-         builder.setTotalFee( your_total_fee ); // String or double
+    //---- Required ----
+    builder.setOutTradeNo( your_out_trade_no );
+    builder.setSubject( your_subject );
+    builder.setBody( your_body );
+    builder.setTotalFee( your_total_fee ); // String or double
  
-         //---- Optional ----
-         builder.setNotifyUrl( your_notify_url );
-         builder.setItBPay(new AlipayTimeOut(15).minute()); // For example, 15 min.
-         builder.setShowUrl( your_show_url );
-         builder.setAppId( your_app_id );
-         builder.setAppEnv( your_app_env );
-         builder.setExternToken( your_extern_token );
+    //---- Optional ----
+    builder.setNotifyUrl( your_notify_url );
+    builder.setItBPay(new AlipayTimeOut(15).minute()); // For example, 15 min.
+    builder.setShowUrl( your_show_url );
+    builder.setAppId( your_app_id );
+    builder.setAppEnv( your_app_env );
+    builder.setExternToken( your_extern_token );
 
-         return builder.build();
-     }
+    return builder.build();
+}
+```
 
 ## 官方支付宝无线 SDK 及文档地址
 
