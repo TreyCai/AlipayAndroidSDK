@@ -23,6 +23,32 @@ Android Studio：File -> Import module
 
 第四步:
 
+添加申请的 Key 到 com.alipay.android.Keys 中:
+
+```Java
+public final class Keys {
+
+    // TODO: 添加合作者 id
+    // 合作身份者id，以2088开头的16位纯数字
+    public static final String DEFAULT_PARTNER = "";
+
+    // TODO: 添加收款支付宝账号
+    // 收款支付宝账号
+    public static final String DEFAULT_SELLER = "";
+
+    // TODO: 添加商户私钥
+    // 商户私钥，自助生成，仅一行
+    public static final String PRIVATE = "";
+
+    // 商户公钥，无需更改
+    public static final String PUBLIC
+            = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+
+}
+```
+
+第五步:
+
 例子:
 
 ```Java
