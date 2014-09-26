@@ -23,7 +23,7 @@ Android Studio：File -> Import module
 
 第四步:
 
-添加申请的 Key 到 com.alipay.android.Keys 中:
+添加申请的 Key 到 [com.alipay.android.Keys](https://github.com/TreyWalker/AlipayAndroidSDK/blob/master/app/src/main/java/com/alipay/android/Keys.java) 中:
 
 ```Java
 public final class Keys {
