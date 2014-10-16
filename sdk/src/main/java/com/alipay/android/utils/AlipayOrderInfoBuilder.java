@@ -3,11 +3,9 @@ package com.alipay.android.utils;
 import com.alipay.android.Keys;
 import com.alipay.android.msp.utils.Rsa;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Alipay 的支付参数字符串生成类
@@ -48,7 +46,7 @@ public final class AlipayOrderInfoBuilder {
      */
     private static final String PARAM_FORMAT = "&%s=\"%s\"";
 
-    private static final String DEFAULT_CHARSET = "utf-8";
+    private static final String DEFAULT_CHARSET = "UTF-8";
 
     private StringBuilder mAlipayInfoBuilder;
 
@@ -114,18 +112,7 @@ public final class AlipayOrderInfoBuilder {
      * @see com.alipay.android.utils.AlipayParam#NOTIFY_URL
      */
     public void setNotifyUrl(String notifyUrl) {
-        setNotifyUrl(notifyUrl, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 应使用 {@link #setNotifyUrl(String)}, 默认编码是 utf-8
-     *
-     * @param notifyUrl 服务器异步通知页面的 url
-     * @param charset   Url encode 的编码字符集
-     * @see com.alipay.android.utils.AlipayParam#NOTIFY_URL
-     */
-    public void setNotifyUrl(String notifyUrl, String charset) {
-        mNotifyUrl = encode(notifyUrl, charset);
+        mNotifyUrl = Uri.encode(notifyUrl);
     }
 
     /**
@@ -141,18 +128,7 @@ public final class AlipayOrderInfoBuilder {
      * @see com.alipay.android.utils.AlipayParam#SHOW_URL
      */
     public void setShowUrl(String showUrl) {
-        setShowUrl(showUrl, DEFAULT_CHARSET);
-    }
-
-    /**
-     * 应使用 {@link #setShowUrl(String)}, 默认编码是 utf-8
-     *
-     * @param showUrl 商品展示的 url 地址
-     * @param charset Url encode 的编码字符集
-     * @see com.alipay.android.utils.AlipayParam#SHOW_URL
-     */
-    public void setShowUrl(String showUrl, String charset) {
-        mShowUrl = encode(showUrl, charset);
+        mShowUrl = Uri.encode(showUrl);
     }
 
     /**
@@ -202,20 +178,22 @@ public final class AlipayOrderInfoBuilder {
         appendRequiredParam(AlipayParam.SERVICE, "mobile.securitypay.pay");
         appendRequiredParam(AlipayParam.INPUT_CHARSET, DEFAULT_CHARSET);
         appendRequiredParam(AlipayParam.PAYMENT_TYPE, "1");
-        appendOptionalParam(AlipayParam.NOTIFY_URL, encode(mNotifyUrl, DEFAULT_CHARSET));
+        appendOptionalParam(AlipayParam.NOTIFY_URL, mNotifyUrl);
         appendOptionalParam(AlipayParam.IT_B_PAY, mItBPay);
-        appendOptionalParam(AlipayParam.SHOW_URL, encode(mShowUrl, DEFAULT_CHARSET));
+        appendOptionalParam(AlipayParam.SHOW_URL, mShowUrl);
         appendOptionalParam(AlipayParam.APP_ID, mAppId);
         appendOptionalParam(AlipayParam.APP_ENV, mAppEnv);
         appendOptionalParam(AlipayParam.EXTERN_TOKEN, mExternToken);
 
+        // 移除第一個 '&'
+        mAlipayInfoBuilder.delete(0, 1);
         // 对要支付的内容进行 RSA 签名，再把签名后的内容并入到支付字符串中
         appendRequiredParam(AlipayParam.SIGN, sign());
         appendRequiredParam(AlipayParam.SIGN_TYPE, "RSA");
 
         logAlipayInfo("Alipay info after build:");
         if (mLogEnabled) {
-            Log.i(TAG, "Alipay info string: " + mAlipayInfoBuilder);
+            Log.i(TAG, "Alipay info string: " + mAlipayInfoBuilder.toString());
         }
         return mAlipayInfoBuilder.toString();
     }
@@ -244,22 +222,8 @@ public final class AlipayOrderInfoBuilder {
      * @return 签名后的字串
      */
     private String sign() {
-        // 移除第一個 '&'
-        String sign = Rsa.sign(mAlipayInfoBuilder.substring(1), Keys.PRIVATE);
-        return encode(sign, DEFAULT_CHARSET);
-    }
-
-    private String encode(String content, String charset) {
-        if (TextUtils.isEmpty(content)) {
-            return null;
-        }
-
-        try {
-            return URLEncoder.encode(content, charset);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        String sign = Rsa.sign(mAlipayInfoBuilder.toString(), Keys.PRIVATE);
+        return Uri.encode(sign);
     }
 
     /**
